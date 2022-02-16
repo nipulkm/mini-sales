@@ -3,6 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SalesController;
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\InvoiceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,29 +19,33 @@ use App\Http\Controllers\ProductController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    return redirect('report');
+})->middleware(['auth']);
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->name('dashboard')->middleware(['auth']);
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// })->name('dashboard')->middleware(['auth']);
 
-Route::get('/report', function () {
-    return view('product_stock_report');
-})->name('report')->middleware(['auth']);
+Route::get('/report', [SalesController::class, 'get_report'])->name('report')->middleware(['auth']);
 
-Route::get('/invoice', function () {
-    return view('invoice');
-})->name('invoice')->middleware(['auth']);
+Route::get('/invoice', [InvoiceController::class, 'index'])->name('invoice')->middleware(['auth']);
+
+Route::get('/invoice/{id}', [InvoiceController::class, 'show'])->name('invoice_details')->middleware(['auth']);
+
+Route::get('/create-invoice', [SalesController::class, 'index'])->name('create_invoice')->middleware(['auth']);
+
+Route::post('/save-invoice', [SalesController::class, 'store'])->name('save_invoice')->middleware(['auth']);
+
+Route::post('/add-customer', [CustomerController::class, 'store'])->name('add_customer')->middleware(['auth']);
 
 // Admin
-Route::get('/add-user', [UserController::class, 'show'])->name('add_user');
+Route::get('/add-user', [UserController::class, 'index'])->name('add_user')->middleware(['admin']);
 
-Route::post('/save-user', [UserController::class, 'store'])->name('save_user');
+Route::post('/save-user', [UserController::class, 'store'])->name('save_user')->middleware(['admin']);
 
-Route::get('/add-product', [ProductController::class, 'show'])->name('add_product');
+Route::get('/add-product', [ProductController::class, 'index'])->name('add_product')->middleware(['admin']);
 
-Route::post('/save-product', [ProductController::class, 'store'])->name('save_product');
+Route::post('/save-product', [ProductController::class, 'store'])->name('save_product')->middleware(['admin']);
 
 // User
 

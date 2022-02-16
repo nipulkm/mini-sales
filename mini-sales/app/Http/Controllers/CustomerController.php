@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Contracts\Validation\Rule;
+use App\Models\CustomerModel;
 
-class UserController extends Controller
+class CustomerController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,14 +14,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = $this->fetch();
-
-        return view('add_user',compact('users'));
-    }
-
-    public function fetch()
-    {
-        return User::where('role', 'user')->get();
+        //
     }
 
     /**
@@ -46,20 +37,17 @@ class UserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required'],
+            'phone_number' => ['required'],
+            'address' => ['required'],
         ]);
-        
-        User::create([
+
+        CustomerModel::create([
             'name' => $request->name,
-            'role' => 'user',
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'phone_number' => $request->phone_number,
+            'address' => $request->address,
         ]);
 
-        $users = $this->fetch();
-
-        return view('add_user',compact('users'));
+        //return redirect('/invoice');
     }
 
     /**
@@ -68,6 +56,10 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    public function show($id)
+    {
+        //
+    }
 
     /**
      * Show the form for editing the specified resource.

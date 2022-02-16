@@ -12,6 +12,13 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function index()
+    {
+        $products = $this->fetch();
+
+        return view('add_product',compact('products'));
+    }
+
     public function fetch()
     {
         return ProductModel::get();
@@ -40,15 +47,19 @@ class ProductController extends Controller
             'quantity' => ['required'],
             'purchase_price' => ['required'],
             'sales_price' => ['required'],
+            'image' => ['required', 'image', 'mimes:jpg,png,jpeg,gif,svg', 'max:2048'],
         ]);
-        
+
+        $path = $request->file('image')->store('public/images');
+        $image_name = pathinfo($path)['basename'];
+
         ProductModel::create([
             'name' => $request->name,
             'description' => $request->description,
             'quantity' => $request->quantity,
             'purchase_price' => $request->purchase_price,
             'sales_price' => $request->sales_price,
-            //'image_path' => $request->image_path,
+            'image_name' => $image_name,
         ]);
 
         $products = $this->fetch();
@@ -62,12 +73,6 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show()
-    {
-        $products = $this->fetch();
-
-        return view('add_product',compact('products'));
-    }
 
     /**
      * Show the form for editing the specified resource.

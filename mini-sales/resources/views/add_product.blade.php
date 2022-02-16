@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Add User') }}
+            {{ __('Add Product') }}
         </h2>
     </x-slot>
 
@@ -20,7 +20,7 @@
                             </div>
                         @endif
                     </div>
-                    <form action="save-product" method="POST">
+                    <form action="save-product" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group">
                             <label for="name">Name:</label>
@@ -41,6 +41,10 @@
                         <div class="form-group">
                             <label for="sales_price">Sales Price:</label>
                             <input type="number" class="form-control" placeholder="Enter sales price" name="sales_price" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="image">Upload Image:</label>
+                            <input type="file" name="image" class="form-control">
                         </div>
                         <div class="text-center">
                             <button type="submit" class="btn btn-primary">Add</button>
@@ -63,6 +67,7 @@
                                 <th>Quantity</th>
                                 <th>Purchase Price</th>
                                 <th>Sales Price</th>
+                                <th>Image</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -73,6 +78,7 @@
                                         <td>{{$product->quantity}}</td>
                                         <td>{{$product->purchase_price}}</td>
                                         <td>{{$product->sales_price}}</td>
+                                        <td align="center"> <img src="{{ asset('storage/images/'.$product->image_name) }}" width="150px" height="130px" style="border:5px solid black;"> </td>
                                     </tr>
                                 @endforeach
                             </tbody>
